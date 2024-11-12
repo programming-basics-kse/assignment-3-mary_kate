@@ -1,16 +1,9 @@
 import argparse
 
-def medals():
-    pass
+# -medals, -output, -total, -overall, -interactive
+parser = argparse.ArgumentParser()
 
-def output():
-    pass
+parser.add_argument("medals", help="top-10 athlete in ____ year")
+args = parser.parse_args()
+print(args.medals)
 
-def total():
-    pass
-
-def overall():
-    pass
-
-def interactive():
-    pass
