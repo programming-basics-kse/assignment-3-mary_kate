@@ -27,12 +27,14 @@ def medals(team, year):
 
                 medals_list[medal] += 1
                 counter += 1
-                print(name, event, medal)
-                #output()
+                print(f"{name}; {event}; {medal}")
+                #output(name, event, medal)
 
             next_line = file.readline()
             next_line = next_line.rstrip('\n')
             next_line = next_line.split('\t')
+
+        print(f"Gold: {medals_list['Gold']}\nSilver: {medals_list['Silver']}\nBronze: {medals_list['Bronze']}")
 
 # def output():
 #     pass
