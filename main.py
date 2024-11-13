@@ -18,17 +18,18 @@ def medals(team, year):
         next_line = next_line.rstrip('\n')
         next_line = next_line.split('\t')
 
+        counter = 0
         while next_line != ['']:
-            counter = 0
-            if (next_line[TEAM] == team or next_line[NOC] == team) and counter <= 10 and next_line[YEAR] == year and next_line[MEDAL] != "NA":
+            if (next_line[TEAM] == team or next_line[NOC] == team) and next_line[YEAR] == year and next_line[MEDAL] != "NA":
                 name = next_line[NAME]
                 event = next_line[EVENT]
                 medal = next_line[MEDAL]
 
                 medals_list[medal] += 1
-                counter += 1
-                print(f"{name}; {event}; {medal}")
-                #output(name, event, medal)
+                if counter < 10:
+                    counter += 1
+                    print(f"{name}; {event}; {medal}")
+                    #output(name, event, medal)
 
             next_line = file.readline()
             next_line = next_line.rstrip('\n')
@@ -58,5 +59,4 @@ args = parser.parse_args()
 team, year = map(str, args.medals)
 output_file = args.output
 medals(team, year)
-
 
