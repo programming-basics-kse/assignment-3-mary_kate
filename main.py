@@ -31,13 +31,16 @@ def medals(team, year):
                 if counter < 10:
                     counter += 1
                     print(f"{name}; {event}; {medal}")
+                    if args.output:
+                        output(name, event, medal,None, output_file)
 
             next_line = file.readline()
             next_line = next_line.rstrip('\n')
             next_line = next_line.split('\t')
 
         print(f"Gold: {medals_list['Gold']}\nSilver: {medals_list['Silver']}\nBronze: {medals_list['Bronze']}")
-        output(name, event, medal,medals_list, output_file)
+        if args.output:
+            output(name, event, medal,medals_list, output_file)
 
 
 def output(name, event, medal,medals_list, output_file):
