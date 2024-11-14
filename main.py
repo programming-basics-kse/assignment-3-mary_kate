@@ -26,10 +26,11 @@ def medals(team, year):
                 medal = next_line[MEDAL]
 
                 medals_list[medal] += 1
+                if output_file and counter < 10:
+                    output(name, event, medal,None, output_file)
                 if counter < 10:
                     counter += 1
                     print(f"{name}; {event}; {medal}")
-                    output(name, event, medal,None, output_file)
 
             next_line = file.readline()
             next_line = next_line.rstrip('\n')
@@ -65,7 +66,8 @@ parser.add_argument("-medals", nargs=2, help="input Team name and year of olympi
 parser.add_argument("-output", help="Name of the file were output will be saved")
 args = parser.parse_args()
 
-team, year = map(str, args.medals)
-output_file = args.output
-medals(team, year)
+if args.medals:
+    team, year = map(str, args.medals)
+    output_file = args.output
+    medals(team, year)
 
