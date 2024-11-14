@@ -26,11 +26,11 @@ def medals(team, year):
                 medal = next_line[MEDAL]
 
                 medals_list[medal] += 1
+                if output_file and counter < 10:
+                    #output(name, event, medal)
                 if counter < 10:
                     counter += 1
                     print(f"{name}; {event}; {medal}")
-                    if output_file:
-                        #output(name, event, medal)
 
             next_line = file.readline()
             next_line = next_line.rstrip('\n')
