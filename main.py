@@ -29,17 +29,26 @@ def medals(team, year):
                 if counter < 10:
                     counter += 1
                     print(f"{name}; {event}; {medal}")
-                    #output(name, event, medal)
+                    output(name, event, medal,None, output_file)
 
             next_line = file.readline()
             next_line = next_line.rstrip('\n')
             next_line = next_line.split('\t')
 
         print(f"Gold: {medals_list['Gold']}\nSilver: {medals_list['Silver']}\nBronze: {medals_list['Bronze']}")
+        output(name, event, medal,medals_list, output_file)
 
-# def output():
-#     pass
-#
+
+def output(name, event, medal,medals_list, output_file):
+    with open(output_file, "a") as file:
+        if name and event and medal:
+            file.write(f"{name}; {event}; {medal}\n")
+        if medals_list:
+            file.write(f"Gold: {medals_list['Gold']}\n")
+            file.write(f"Silver: {medals_list['Silver']}\n")
+            file.write(f"Bronze: {medals_list['Bronze']}\n")
+
+
 # def total():
 #     pass
 #
