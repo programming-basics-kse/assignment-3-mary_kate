@@ -53,9 +53,39 @@ def output(name, event, medal,medals_list, output_file):
 # def total():
 #     pass
 #
-# def overall():
-#     pass
-#
+def overall(countries):
+    country_medals = {}
+    for country in countries:
+        country_medals[country] = {}
+    with open("Olympic Athletes - athlete_events.tsv", "r") as file:
+        header = file.readline().rstrip('\n').split('\t')
+
+        YEAR = header.index("Year")
+        TEAM = header.index("Team")
+        NOC = header.index("NOC")
+        MEDAL = header.index("Medal")
+
+        next_line = file.readline().rstrip('\n').split('\t')
+
+        while next_line != ['']:
+            year = next_line[YEAR]
+            team = next_line[TEAM]
+            noc = next_line[NOC]
+            medal = next_line[MEDAL]
+
+            for country in countries:
+                if(team == country or noc == country) and medal !="NA":
+                    country_medals[country][year] = country_medals[country].get(year,0)+1
+
+            next_line = file.readline().rstrip('\n').split('\t')
+
+        for country in countries:
+            if country_medals[country]:
+                max_year = max(country_medals[country], key=country_medals[country].get)
+                max_medals = country_medals[country][max_year]
+                print(f"{country}. Year with most medals - {max_year}, total - {max_medals}")
+            else: print("No medals data")
+
 # def interactive():
 #     pass
 
@@ -64,10 +94,13 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("-medals", nargs=2, help="input Team name and year of olympiad")
 parser.add_argument("-output", help="Name of the file were output will be saved")
+parser.add_argument("-overall", nargs="+",help="List of countries")
 args = parser.parse_args()
 
 if args.medals:
     team, year = map(str, args.medals)
     output_file = args.output
     medals(team, year)
+if args.overall:
+    overall(args.overall)
 
