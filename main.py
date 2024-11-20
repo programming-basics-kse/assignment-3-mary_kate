@@ -40,7 +40,6 @@ def medals(team, year):
         if args.output:
             output(name, event, medal,medals_list, output_file)
 
-
 def output(name, event, medal,medals_list, output_file):
     with open(output_file, "a") as file:
         if name and event and medal:
@@ -49,7 +48,6 @@ def output(name, event, medal,medals_list, output_file):
             file.write(f"Gold: {medals_list['Gold']}\n")
             file.write(f"Silver: {medals_list['Silver']}\n")
             file.write(f"Bronze: {medals_list['Bronze']}\n")
-
 
 def total(year):
     countries = {}
@@ -76,9 +74,6 @@ def total(year):
     for country, medal in countries.items():
         print(f"{country}, Gold: {medal["Gold"]}, Silver: {medal["Silver"]}, Bronze: {medal["Bronze"]}")
 
-# def total():
-#     pass
-#
 def overall(countries):
     country_medals = {}
     for country in countries:
@@ -117,11 +112,11 @@ def overall(countries):
 
 # -medals, -output, -total, -overall, -interactive
 parser = argparse.ArgumentParser()
-
-parser.add_argument("-medals", nargs=2, help="input Team name and year of olympiad")
+group = parser.add_mutually_exclusive_group()
+group.add_argument("-medals", nargs=2, help="input Team name and year of olympiad")
 parser.add_argument("-output", help="Name of the file were output will be saved")
-parser.add_argument("-total", help="Year of olympiad, will give you countries with medals")
-parser.add_argument("-overall", nargs="+",help="List of countries")
+group.add_argument("-total", help="Year of olympiad, will give you countries with medals")
+group.add_argument("-overall", nargs="+",help="List of countries")
 args = parser.parse_args()
 
 if args.medals:
@@ -133,5 +128,4 @@ if args.overall:
     overall(args.overall)
 
 if args.total:
-    year = args.total
-    total(year)
+    total(args.total)
