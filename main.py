@@ -51,6 +51,31 @@ def output(name, event, medal,medals_list, output_file):
             file.write(f"Bronze: {medals_list['Bronze']}\n")
 
 
+def total(year):
+    countries = {}
+
+    with open("Olympic Athletes - athlete_events.tsv", "r") as file:
+        header = file.readline().rstrip('\n').split('\t')
+
+        YEAR = header.index("Year")
+        NOC = header.index("NOC")
+        MEDAL = header.index("Medal")
+
+        next_line = file.readline()
+
+        while next_line:
+            next_line = next_line.rstrip('\n')
+            next_line = next_line.split('\t')
+
+            if next_line[YEAR] == year and next_line[MEDAL] != "NA":
+                if next_line[NOC] not in countries:
+                    countries[next_line[NOC]] = {"Gold": 0, "Silver": 0, "Bronze": 0}
+                countries[next_line[NOC]][next_line[MEDAL]] += 1
+            next_line = file.readline()
+
+    for country, medal in countries.items():
+        print(f"{country}, Gold: {medal["Gold"]}, Silver: {medal["Silver"]}, Bronze: {medal["Bronze"]}")
+
 # def total():
 #     pass
 #
@@ -62,9 +87,9 @@ def output(name, event, medal,medals_list, output_file):
 
 # -medals, -output, -total, -overall, -interactive
 parser = argparse.ArgumentParser()
-
 parser.add_argument("-medals", nargs=2, help="input Team name and year of olympiad")
 parser.add_argument("-output", help="Name of the file were output will be saved")
+parser.add_argument("-total", help="Year of olympiad, will give you countries with medals")
 args = parser.parse_args()
 
 if args.medals:
@@ -72,3 +97,6 @@ if args.medals:
     output_file = args.output
     medals(team, year)
 
+if args.total:
+    year = args.total
+    total(year)
