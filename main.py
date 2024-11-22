@@ -122,6 +122,10 @@ def interactive():
 
     while True:
         country = input("Enter a name or code of country: ")
+
+        if country == 'exit':
+            return None
+
         country_data = []
         for row in data:
             if row[TEAM] == country or row[NOC] == country:
@@ -163,33 +167,25 @@ def interactive():
         average_silver = round(total_silver / total_years if total_years > 0 else 0)
         average_bronze = round(total_bronze / total_years if total_years > 0 else 0)
 
-        print(f"Перша участь: {first_year} у {first_city}")
+        print(f"First participation: {first_year} у {first_city}")
         if most_successful:
-            print(f"Найуспішніша олімпіада: {most_successful[0]} ({sum(most_successful[1].values())} медалей)")
+            print(f"The most successful Olympiad: {most_successful[0]} ({sum(most_successful[1].values())} medals)")
         if least_successful:
-            print(f"Найневдаліша олімпіада: {least_successful[0]} ({sum(least_successful[1].values())} медалей)")
+            print(f"The most unsuccessful Olympics: {least_successful[0]} ({sum(least_successful[1].values())} medals)")
         else:
-            print("Усі олімпіади для цієї країни були успішними.")
-        print(f"Середня кількість медалей: Gold: {average_gold}, Silver: {average_silver}, Bronze: {average_bronze}")
+            print("All the Olympiads were successful for this country.")
+        print(f"Average number of medals: Gold: {average_gold}, Silver: {average_silver}, Bronze: {average_bronze}")
 
 
 # -medals, -output, -total, -overall, -interactive
 parser = argparse.ArgumentParser()
-
-parser.add_argument("-medals", nargs=2, help="input Team name and year of olympiad")
+group = parser.add_mutually_exclusive_group()
+group.add_argument("-medals", nargs=2, help="input Team name and year of olympiad")
 parser.add_argument("-output", help="Name of the file were output will be saved")
-parser.add_argument("-interactive", action="store_true", help="Запустити інтерактивний режим")
-
+group.add_argument("-total", help="Year of olympiad, will give you countries with medals")
+group.add_argument("-overall", nargs="+",help="List of countries")
+group.add_argument("-interactive", action="store_true", help="Запустити інтерактивний режим")
 args = parser.parse_args()
-
-if args.medals:
-    team, year = map(str, args.medals)
-    output_file = args.output
-    medals(team, year)
-
-if args.interactive:
-    interactive()
-
 
 if args.medals:
     team, year = map(str, args.medals)
@@ -201,3 +197,6 @@ if args.overall:
 
 if args.total:
     total(args.total)
+
+if args.interactive:
+    interactive()
