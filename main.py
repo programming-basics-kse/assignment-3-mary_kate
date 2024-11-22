@@ -1,4 +1,29 @@
 import argparse
+from __main__ import Player
+
+def player_list():
+    players = []
+
+    with open("Olympic Athletes - athlete_events.tsv", "r") as file:
+        header = file.readline().rstrip('\n').split('\t')
+
+        NAME = header.index("Name")
+        YEAR = header.index("Year")
+        TEAM = header.index("Team")
+        NOC = header.index("NOC")
+        EVENT = header.index("Event")
+        CITY = header.index("City")
+        MEDAL = header.index("Medal")
+
+        line = file.readline()
+
+        while line:
+            line = line.rstrip('\n')
+            line = line.split('\t')
+            players.append(Player(line[NAME], line[TEAM], line[NOC], line[YEAR], line[CITY], line[EVENT], line[MEDAL]))
+            line = file.readline()
+
+    return players
 
 def medals(team, year):
 
@@ -186,6 +211,8 @@ group.add_argument("-total", help="Year of olympiad, will give you countries wit
 group.add_argument("-overall", nargs="+",help="List of countries")
 group.add_argument("-interactive", action="store_true", help="Запустити інтерактивний режим")
 args = parser.parse_args()
+
+players = player_list()
 
 if args.medals:
     team, year = map(str, args.medals)
