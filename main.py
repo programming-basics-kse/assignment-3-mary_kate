@@ -122,6 +122,10 @@ def interactive():
 
     while True:
         country = input("Enter a name or code of country: ")
+
+        if country == 'exit':
+            return None
+
         country_data = []
         for row in data:
             if row[TEAM] == country or row[NOC] == country:
