@@ -1,5 +1,5 @@
 import argparse
-from __main__ import Player
+from player_class import Player
 
 def player_list():
     players = []
@@ -29,41 +29,23 @@ def medals(team, year):
 
     medals_list = {'Gold': 0, 'Silver': 0, 'Bronze': 0}
 
-    with open("Olympic Athletes - athlete_events.tsv", "r") as file:
-        header = file.readline().rstrip('\n').split('\t')
+    counter = 0
+    for player in players:
+        if (player.team == team or player.noc == team) and player.year == year and player.medal != "NA":
+            name = player.name
+            event = player.event
+            medal = player.medal
 
-        YEAR = header.index("Year")
-        TEAM = header.index("Team")
-        NOC = header.index("NOC")
-        NAME = header.index("Name")
-        EVENT = header.index("Event")
-        MEDAL = header.index("Medal")
+            medals_list[medal] += 1
+            if counter < 10:
+                counter += 1
+                print(f"{name}; {event}; {medal}")
+                if args.output:
+                    output(name, event, medal, None, output_file)
 
-        next_line = file.readline()
-        next_line = next_line.rstrip('\n')
-        next_line = next_line.split('\t')
-
-        counter = 0
-        while next_line != ['']:
-            if (next_line[TEAM] == team or next_line[NOC] == team) and next_line[YEAR] == year and next_line[MEDAL] != "NA":
-                name = next_line[NAME]
-                event = next_line[EVENT]
-                medal = next_line[MEDAL]
-
-                medals_list[medal] += 1
-                if counter < 10:
-                    counter += 1
-                    print(f"{name}; {event}; {medal}")
-                    if args.output:
-                        output(name, event, medal, None, output_file)
-
-            next_line = file.readline()
-            next_line = next_line.rstrip('\n')
-            next_line = next_line.split('\t')
-
-        print(f"Gold: {medals_list['Gold']}\nSilver: {medals_list['Silver']}\nBronze: {medals_list['Bronze']}")
-        if args.output:
-            output(name, event, medal,medals_list, output_file)
+    print(f"Gold: {medals_list['Gold']}\nSilver: {medals_list['Silver']}\nBronze: {medals_list['Bronze']}")
+    if args.output:
+        output(name, event, medal, medals_list, output_file)
 
 def output(name, event, medal,medals_list, output_file):
     with open(output_file, "a") as file:
@@ -77,24 +59,11 @@ def output(name, event, medal,medals_list, output_file):
 def total(year):
     countries = {}
 
-    with open("Olympic Athletes - athlete_events.tsv", "r") as file:
-        header = file.readline().rstrip('\n').split('\t')
-
-        YEAR = header.index("Year")
-        NOC = header.index("NOC")
-        MEDAL = header.index("Medal")
-
-        next_line = file.readline()
-
-        while next_line:
-            next_line = next_line.rstrip('\n')
-            next_line = next_line.split('\t')
-
-            if next_line[YEAR] == year and next_line[MEDAL] != "NA":
-                if next_line[NOC] not in countries:
-                    countries[next_line[NOC]] = {"Gold": 0, "Silver": 0, "Bronze": 0}
-                countries[next_line[NOC]][next_line[MEDAL]] += 1
-            next_line = file.readline()
+    for player in players:
+        if player.year == year and player.medal != "NA":
+            if player.noc not in countries:
+                countries[player.noc] = {"Gold": 0, "Silver": 0, "Bronze": 0}
+            countries[player.noc][player.medal] += 1
 
     for country, medal in countries.items():
         print(f"{country}, Gold: {medal["Gold"]}, Silver: {medal["Silver"]}, Bronze: {medal["Bronze"]}")
