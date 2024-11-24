@@ -72,75 +72,49 @@ def overall(countries):
     country_medals = {}
     for country in countries:
         country_medals[country] = {}
-    with open("Olympic Athletes - athlete_events.tsv", "r") as file:
-        header = file.readline().rstrip('\n').split('\t')
 
-        YEAR = header.index("Year")
-        TEAM = header.index("Team")
-        NOC = header.index("NOC")
-        MEDAL = header.index("Medal")
-
-        next_line = file.readline().rstrip('\n').split('\t')
-
-        while next_line != ['']:
-            year = next_line[YEAR]
-            team = next_line[TEAM]
-            noc = next_line[NOC]
-            medal = next_line[MEDAL]
-
-            for country in countries:
-                if(team == country or noc == country) and medal !="NA":
-                    country_medals[country][year] = country_medals[country].get(year,0)+1
-
-            next_line = file.readline().rstrip('\n').split('\t')
-
+    for player in players:
         for country in countries:
-            if country_medals[country]:
-                max_year = max(country_medals[country], key=country_medals[country].get)
-                max_medals = country_medals[country][max_year]
-                print(f"{country}. Year with most medals - {max_year}, total - {max_medals}")
-            else: print("No medals data")
+            if player.team == country or player.noc == country:
+                if player.medal != "NA":
+                    if player.year not in country_medals[country]:
+                        country_medals[country][player.year] = 0
+                    country_medals[country][player.year] += 1
 
+    for country in countries:
+        if country_medals[country]:
+            max_year = max(country_medals[country], key=country_medals[country].get)
+            max_medals = country_medals[country][max_year]
+            print(f"{country}. Year with most medals - {max_year}, total - {max_medals}")
+        else:
+            print(f"No medals data for {country}")
 def interactive():
-    with open("Olympic Athletes - athlete_events.tsv", "r") as file:
-        header = file.readline().rstrip('\n').split('\t')
-        YEAR = header.index("Year")
-        TEAM = header.index("Team")
-        NOC = header.index("NOC")
-        MEDAL = header.index("Medal")
-        CITY = header.index("City")
-
-        data = []
-        for line in file:
-            data.append(line.rstrip('\n').split('\t'))
-
     while True:
         country = input("Enter a name or code of country: ")
 
         if country == 'exit':
             return None
 
-        country_data = []
-        for row in data:
-            if row[TEAM] == country or row[NOC] == country:
-                country_data.append(row)
+        country_players = []
+        for player in players:
+            if player.team == country or player.noc == country:
+                country_players.append(player)
 
-        if not country_data:
+        if not country_players:
             print(f"No data found for country: {country}")
             continue
 
         first_year, first_city = None, None
-        for row in country_data:
-            if first_year is None or int(row[YEAR]) < int(first_year):
-                first_year, first_city = row[YEAR], row[CITY]
+        for player in country_players:
+            if first_year is None or int(player.year) < int(first_year):
+                first_year, first_city = player.year, player.city
 
         medals_by_year = {}
-        for row in country_data:
-            year, medal = row[YEAR], row[MEDAL]
-            if medal != "NA":
-                if year not in medals_by_year:
-                    medals_by_year[year] = {'Gold': 0, 'Silver': 0, 'Bronze': 0}
-                medals_by_year[year][medal] += 1
+        for player in country_players:
+            if player.medal != "NA":
+                if player.year not in medals_by_year:
+                    medals_by_year[player.year] = {'Gold': 0, 'Silver': 0, 'Bronze': 0}
+                medals_by_year[player.year][player.medal] += 1
 
         most_successful, least_successful = None, None
         for year, counts in medals_by_year.items():
