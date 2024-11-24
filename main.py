@@ -48,6 +48,7 @@ def medals(team, year):
         output(name, event, medal, medals_list, output_file)
 
 def output(name, event, medal,medals_list, output_file):
+
     with open(output_file, "a") as file:
         if name and event and medal:
             file.write(f"{name}; {event}; {medal}\n")
@@ -55,6 +56,7 @@ def output(name, event, medal,medals_list, output_file):
             file.write(f"Gold: {medals_list['Gold']}\n")
             file.write(f"Silver: {medals_list['Silver']}\n")
             file.write(f"Bronze: {medals_list['Bronze']}\n")
+
 
 def total(year):
     countries = {}
@@ -68,6 +70,7 @@ def total(year):
     for country, medal in countries.items():
         print(f"{country}, Gold: {medal["Gold"]}, Silver: {medal["Silver"]}, Bronze: {medal["Bronze"]}")
 
+
 def overall(countries):
     country_medals = {}
     for country in countries:
@@ -75,11 +78,10 @@ def overall(countries):
 
     for player in players:
         for country in countries:
-            if player.team == country or player.noc == country:
-                if player.medal != "NA":
-                    if player.year not in country_medals[country]:
-                        country_medals[country][player.year] = 0
-                    country_medals[country][player.year] += 1
+            if ((player.team == country or player.noc == country) and player.medal != "NA"
+                    and player.year not in country_medals[country]):
+                country_medals[country][player.year] = 0
+                country_medals[country][player.year] += 1
 
     for country in countries:
         if country_medals[country]:
@@ -88,7 +90,10 @@ def overall(countries):
             print(f"{country}. Year with most medals - {max_year}, total - {max_medals}")
         else:
             print(f"No medals data for {country}")
+
+
 def interactive():
+
     while True:
         country = input("Enter a name or code of country: ")
 
@@ -145,7 +150,6 @@ def interactive():
         print(f"Average number of medals: Gold: {average_gold}, Silver: {average_silver}, Bronze: {average_bronze}")
 
 
-# -medals, -output, -total, -overall, -interactive
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-medals", nargs=2, help="input Team name and year of olympiad")
