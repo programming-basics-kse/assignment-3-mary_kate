@@ -32,7 +32,7 @@ def medals(team, year):
 
     counter = 0
     for player in players:
-        if (player.team == team or player.noc == team) and player.year == year and player.medal != "NA":
+        if (player.team == team or player.noc == team) and player.year == year:
             name = player.name
             event = player.event
             medal = player.medal
@@ -63,7 +63,7 @@ def total(year):
     countries = {}
 
     for player in players:
-        if player.year == year and player.medal != "NA":
+        if player.year == year:
             if player.noc not in countries:
                 countries[player.noc] = {"Gold": 0, "Silver": 0, "Bronze": 0}
             countries[player.noc][player.medal] += 1
@@ -79,8 +79,7 @@ def overall(countries):
 
     for player in players:
         for country in countries:
-            if ((player.team == country or player.noc == country) and player.medal != "NA"
-                    and player.year not in country_medals[country]):
+            if (player.team == country or player.noc == country) and player.year not in country_medals[country]:
                 country_medals[country][player.year] = 0
                 country_medals[country][player.year] += 1
 
@@ -117,10 +116,9 @@ def interactive():
 
         medals_by_year = {}
         for player in country_players:
-            if player.medal != "NA":
-                if player.year not in medals_by_year:
-                    medals_by_year[player.year] = {'Gold': 0, 'Silver': 0, 'Bronze': 0}
-                medals_by_year[player.year][player.medal] += 1
+            if player.year not in medals_by_year:
+                medals_by_year[player.year] = {'Gold': 0, 'Silver': 0, 'Bronze': 0}
+            medals_by_year[player.year][player.medal] += 1
 
         most_successful, least_successful = None, None
         for year, counts in medals_by_year.items():
