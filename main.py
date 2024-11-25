@@ -79,8 +79,9 @@ def overall(countries):
 
     for player in players:
         for country in countries:
-            if (player.team == country or player.noc == country) and player.year not in country_medals[country]:
-                country_medals[country][player.year] = 0
+            if player.team == country or player.noc == country:
+                if player.year not in country_medals[country]:
+                    country_medals[country][player.year] = 0
                 country_medals[country][player.year] += 1
 
     for country in countries:
