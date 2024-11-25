@@ -20,7 +20,8 @@ def player_list():
         while line:
             line = line.rstrip('\n')
             line = line.split('\t')
-            players.append(Player(line[NAME], line[TEAM], line[NOC], line[YEAR], line[CITY], line[EVENT], line[MEDAL]))
+            if line[MEDAL] != 'NA':
+                players.append(Player(line[NAME], line[TEAM], line[NOC], line[YEAR], line[CITY], line[EVENT], line[MEDAL]))
             line = file.readline()
 
     return players
